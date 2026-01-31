@@ -108,7 +108,7 @@
                     return;
                 }
 
-                // Render Exercises
+                
                 contentDiv.classList.remove('text-center', 'py-16');
                 contentDiv.innerHTML = `
                     <div class="overflow-x-auto">
@@ -125,7 +125,7 @@
                             <tbody class="divide-y divide-gray-100 text-sm">
                                 ${exercises.map(ex => {
                     const lessonInfo = lessonMap[ex.lesson_id];
-                    // Extract a preview of the question or content
+                    
                     let preview = 'Latihan Praktik';
                     if (ex.content && ex.content.question) {
                         preview = ex.content.question.substring(0, 40) + (ex.content.question.length > 40 ? '...' : '');
@@ -133,7 +133,7 @@
                         preview = 'Pemahaman Membaca';
                     }
 
-                    const isCompleted = lessonInfo.status === 'completed'; // Assuming lesson complete = exercises complete for now
+                    const isCompleted = lessonInfo.status === 'completed'; 
 
                     return `
                                     <tr class="hover:bg-gray-50 transition-colors">
@@ -169,7 +169,7 @@
                 `;
             }
 
-            // Expose goToLesson if not already global (it is in student-dashboard but maybe not here)
+            
             window.goToLesson = (id) => {
                 if (!id) return;
                 localStorage.setItem('currentLessonId', id);
