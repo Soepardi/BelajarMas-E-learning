@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Siswa - BelajarMas</title>
+    <link rel="icon" type="image/x-icon" href="assets/images/icon.ico">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/style.css">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+
+<body class="bg-white text-brand-black min-h-screen font-sans">
+    <div id="app" class="flex min-h-screen">
+        <div id="sidebar-container"></div>
+        <main class="flex-1 md:ml-64 relative w-full">
+            <div id="mobile-header-container"></div>
+            <div class="p-6 md:p-10 max-w-7xl mx-auto space-y-8 animate-fade-in">
+                <header>
+                    <h1 class="text-3xl font-heading font-bold text-brand-black mb-2">Direktori Siswa</h1>
+                    <p class="text-gray-500">Lihat kinerja dan kemajuan siswa yang terdaftar.</p>
+                </header>
+
+                <div
+                    class="bg-white rounded-2xl overflow-hidden p-6 text-center py-16 shadow-sm border border-gray-100">
+                    <div
+                        class="w-16 h-16 rounded-full bg-brand-orange/10 flex items-center justify-center mx-auto mb-4 text-brand-orange">
+                        <i class="fas fa-users text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-brand-black mb-2">Daftar Siswa</h3>
+                    <p class="text-gray-500 max-w-md mx-auto">Analitik siswa dan pelacakan kemajuan akan segera hadir.
+                    </p>
+                </div>
+            </div>
+        </main>
+    </div>
+    <script type="module">
+        import { renderSidebar, renderMobileHeader } from './assets/js/components.js';
+        import { checkSession, signOut } from './assets/js/auth.js';
+        import { supabase } from './assets/js/supabaseClient.js';
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            const session = await checkSession();
+            document.getElementById('sidebar-container').innerHTML = renderSidebar('students', 'teacher');
+            document.getElementById('mobile-header-container').innerHTML = renderMobileHeader();
+            document.getElementById('logoutBtn')?.addEventListener('click', signOut);
+
+            const container = document.querySelector('.p-6');
+
+            // 1. Fetch Teacher's Lessons
+            const { data: myLessons } = await supabase
+                .from('lessons')
+                .select('id')
+                .eq('created_by', session.user.id);
+
+            if (!myLessons || myLessons.length === 0) {
+                container.innerHTML += `<p class="text-gray-500">Anda belum membuat pelajaran apa pun, jadi tidak ada siswa untuk ditampilkan.</p>`;
+                return;
+            }
+
+            const myLessonIds = myLessons.map(l => l.id);
+
+            // 2. Fetch Progress (Enrollments)
+            const { data: enrollments, error } = await supabase
+                .from('progress')
+                .select(`
+                    student_id,
+                    status,
+                    score,
+                    profiles:student_id (full_name, email)
+                `)
+                .in('lesson_id', myLessonIds);
+
+            if (error) {
+                console.error(error);
+                return;
+            }
+
+            // Group by Student (Unique Students)
+            const uniqueStudents = {};
+            enrollments.forEach(e => {
+                if (!uniqueStudents[e.student_id]) {
+                    uniqueStudents[e.student_id] = {
+                        name: e.profiles.full_name,
+                        email: e.profiles.email,
+                        enrolledCount: 0,
+                        completedCount: 0
+                    };
+                }
+                uniqueStudents[e.student_id].enrolledCount++;
+                if (e.status === 'completed') uniqueStudents[e.student_id].completedCount++;
+            });
+
+            const studentsList = Object.values(uniqueStudents);
+
+            // Render
+            const contentDiv = document.querySelector('.bg-white.rounded-2xl');
+            if (studentsList.length > 0) {
+                contentDiv.classList.remove('text-center', 'py-16');
+                contentDiv.innerHTML = `
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left">
+                            <thead class="bg-gray-50 border-b border-gray-100 text-gray-500 text-sm uppercase tracking-wider">
+                                <tr>
+                                    <th class="px-6 py-4 font-medium">Nama Siswa</th>
+                                    <th class="px-6 py-4 font-medium">Email</th>
+                                    <th class="px-6 py-4 font-medium">Kursus Terdaftar</th>
+                                    <th class="px-6 py-4 font-medium">Selesai</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-gray-100 text-sm">
+                                ${studentsList.map(s => `
+                                    <tr class="hover:bg-gray-50 transition-colors">
+                                        <td class="px-6 py-4 font-medium text-gray-900">
+                                            <div class="flex items-center gap-3">
+                                                <div class="w-8 h-8 rounded-full bg-brand-teal/10 flex items-center justify-center text-brand-teal text-xs font-bold">
+                                                    ${s.name.charAt(0).toUpperCase()}
+                                                </div>
+                                                ${s.name}
+                                            </div>
+                                        </td>
+                                        <td class="px-6 py-4 text-gray-500">${s.email}</td>
+                                        <td class="px-6 py-4 text-gray-900">${s.enrolledCount}</td>
+                                        <td class="px-6 py-4 text-green-600 font-medium">${s.completedCount}</td>
+                                    </tr>
+                                `).join('')}
+                            </tbody>
+                        </table>
+                    </div>
+                `;
+            } else {
+                contentDiv.innerHTML = `
+                    <div class="w-16 h-16 rounded-full bg-brand-orange/10 flex items-center justify-center mx-auto mb-4 text-brand-orange">
+                        <i class="fas fa-users text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-brand-black mb-2">Belum Ada Siswa</h3>
+                    <p class="text-gray-500 max-w-md mx-auto">Siswa akan muncul di sini setelah mereka mendaftar di kursus Anda.</p>
+                `;
+            }
+        });
+    </script>
+</body>
+
+</html>

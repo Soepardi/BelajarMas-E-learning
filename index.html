@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BelajarMas - Bangun Keahlianmu</title>
+    <link rel="icon" type="image/x-icon" href="assets/images/icon.ico">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700&display=swap"
+        rel="stylesheet">
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="assets/css/style.css">
+</head>
+
+<body class="bg-white text-brand-black font-sans">
+
+    <!-- Header Section (Navbar + Hero) in Cream -->
+    <header id="home" class="bg-brand-cream w-full relative">
+        <!-- Navbar -->
+        <nav class="max-w-7xl mx-auto px-6 py-6 flex items-center justify-between">
+            <div class="flex items-center gap-2">
+                <img src="assets/images/logo.png" alt="BelajarMas" class="w-8 h-8 object-contain">
+                <span class="text-2xl font-heading font-bold text-brand-black">BelajarMas</span>
+            </div>
+
+            <!-- Desktop Menu -->
+            <div class="hidden md:flex items-center gap-8 font-medium text-gray-600">
+                <a href="#home" class="text-brand-teal font-semibold">Beranda</a>
+                <a href="#categories" class="hover:text-brand-teal transition-colors">Kursus</a>
+            </div>
+
+            <div class="hidden md:flex items-center gap-4">
+                <a href="login.html"
+                    class="px-6 py-2 rounded-full border border-brand-teal text-brand-teal font-medium hover:bg-brand-teal hover:text-white transition-all">Masuk</a>
+                <a href="register.html"
+                    class="px-6 py-2 rounded-full bg-brand-orange text-white font-medium hover:bg-brand-orange-hover transition-all shadow-lg shadow-brand-orange/20">Daftar</a>
+            </div>
+
+            <!-- Mobile Menu Button -->
+            <button id="mobile-menu-btn" class="md:hidden text-gray-600 hover:text-brand-teal focus:outline-none">
+                <i class="fas fa-bars text-2xl"></i>
+            </button>
+        </nav>
+
+        <!-- Mobile Menu Dropdown -->
+        <div id="mobile-menu"
+            class="hidden md:hidden absolute top-full left-0 w-full bg-white shadow-lg z-50 border-t border-gray-100">
+            <div class="flex flex-col p-4 space-y-4">
+                <a href="#home" class="text-brand-teal font-semibold px-4 py-2 hover:bg-gray-50 rounded-lg">Beranda</a>
+                <a href="#categories"
+                    class="text-gray-600 px-4 py-2 hover:bg-gray-50 rounded-lg hover:text-brand-teal">Kursus</a>
+                <div class="border-t border-gray-100 pt-4 flex flex-col gap-3">
+                    <a href="login.html"
+                        class="text-center w-full px-6 py-2 rounded-full border border-brand-teal text-brand-teal font-medium hover:bg-brand-teal hover:text-white transition-all">Masuk</a>
+                    <a href="register.html"
+                        class="text-center w-full px-6 py-2 rounded-full bg-brand-orange text-white font-medium hover:bg-brand-orange-hover transition-all shadow-lg shadow-brand-orange/20">Daftar</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Hero Content -->
+        <div class="max-w-7xl mx-auto px-6 py-12 md:py-20 grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+            <!-- Left Content -->
+            <div class="space-y-8 animate-fade-in">
+                <div class="flex items-center gap-2 text-brand-orange font-medium">
+                    <i class="fas fa-sun animate-spin-slow"></i>
+                    <span>Uji Coba Gratis 30 Hari</span>
+                </div>
+
+                <h1 class="text-5xl md:text-6xl font-heading font-bold leading-tight text-brand-black">
+                    Bangun Keahlian<br>
+                    Bahasa Inggrismu di Platform <span
+                        class="bg-brand-orange text-white px-4 transform -skew-x-3 inline-block rounded-lg">Terbaik</span>
+                </h1>
+
+                <p class="text-gray-500 text-lg max-w-md leading-relaxed">
+                    Temukan Kursus Bahasa Inggris Tanpa Batas yang Sesuai dengan Minatmu untuk Mempercepat Proses
+                    Pengembangan Keahlian.
+                </p>
+
+                <div class="flex flex-col sm:flex-row gap-6 items-start sm:items-center">
+                    <a href="register.html"
+                        class="px-8 py-4 rounded-full bg-brand-teal text-white font-bold text-lg hover:bg-brand-teal-dark transition-all shadow-xl shadow-brand-teal/20">
+                        Mulai Sekarang
+                    </a>
+
+                    <button class="flex items-center gap-4 group" onclick="alert('Video preview coming soon!')">
+                        <div
+                            class="w-12 h-12 rounded-full bg-brand-orange text-white flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform">
+                            <i class="fas fa-play ml-1"></i>
+                        </div>
+                        <span class="font-bold text-gray-700">Putar Video</span>
+                    </button>
+                </div>
+
+                <div class="pt-8 flex items-center gap-4">
+                    <div class="flex -space-x-4">
+                        <img src="https://i.pravatar.cc/100?img=1" alt="User"
+                            class="w-10 h-10 rounded-full border-2 border-white">
+                        <img src="https://i.pravatar.cc/100?img=2" alt="User"
+                            class="w-10 h-10 rounded-full border-2 border-white">
+                        <img src="https://i.pravatar.cc/100?img=3" alt="User"
+                            class="w-10 h-10 rounded-full border-2 border-white">
+                        <img src="https://i.pravatar.cc/100?img=4" alt="User"
+                            class="w-10 h-10 rounded-full border-2 border-white">
+                    </div>
+                    <div>
+                        <p class="font-bold text-brand-black">10.000+ Aktif</p>
+                        <p class="text-gray-500 text-sm">Siswa</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Image -->
+            <div class="relative animate-fade-in" style="animation-delay: 0.2s;">
+                <!-- Abstract Background Shapes -->
+                <div
+                    class="absolute top-10 right-10 w-full h-full bg-brand-orange/10 rounded-tr-[100px] rounded-bl-[100px] -z-10">
+                </div>
+                <div class="absolute bottom-[-20px] left-[-20px] w-24 h-24 bg-dots text-brand-teal opacity-20"></div>
+
+                <!-- Main Hero Image -->
+                <div class="relative z-10 rounded-3xl overflow-hidden shadow-2xl">
+                    <img src="../assets/images/3.jpg"
+                        alt="Student Learning" class="w-full h-full object-cover">
+                </div>
+
+                <!-- Decorative doodles (CSS based) -->
+                <svg class="absolute -top-10 left-10 w-16 h-16 text-brand-orange" viewBox="0 0 100 100" fill="none"
+                    stroke="currentColor" stroke-width="5">
+                    <path d="M10,50 Q25,25 50,50 T90,50" />
+                </svg>
+            </div>
+        </div>
+    </header>
+
+    <!-- Categories Section (White Background, Cream Cards) -->
+    <section id="categories" class="max-w-7xl mx-auto px-6 py-20">
+        <div class="text-center mb-16 space-y-4">
+            <div class="flex items-center justify-center gap-2 text-brand-orange font-medium">
+                <i class="fas fa-star text-xs"></i>
+                <span class="text-sm uppercase tracking-wider">Kategori Kursus</span>
+            </div>
+            <h2 class="text-3xl md:text-4xl font-heading font-bold text-brand-black">
+                Jelajahi Kategori Kursus Kami
+            </h2>
+            <p class="text-gray-500 max-w-2xl mx-auto">
+                Pilih kategori untuk memulai perjalanan belajarmu.
+            </p>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            <!-- Card 1 -->
+            <div
+                class="group bg-brand-cream border border-orange-100 p-8 rounded-3xl text-center hover:bg-orange-100 hover:shadow-xl hover:shadow-brand-orange/10 transition-all cursor-pointer">
+                <div
+                    class="w-16 h-16 mx-auto mb-6 bg-green-100 rounded-2xl flex items-center justify-center text-green-600 text-2xl group-hover:scale-110 transition-transform">
+                    <i class="fas fa-language"></i>
+                </div>
+                <h3 class="text-xl font-bold text-brand-black mb-2">Bahasa Inggris</h3>
+                <p class="text-gray-500 text-sm">Kuasai membaca, menulis, dan berbicara.</p>
+            </div>
+
+            <!-- Card 2 -->
+            <div
+                class="group bg-brand-cream border border-orange-100 p-8 rounded-3xl text-center hover:bg-orange-100 hover:shadow-xl hover:shadow-brand-orange/10 transition-all cursor-pointer">
+                <div
+                    class="w-16 h-16 mx-auto mb-6 bg-teal-100 rounded-2xl flex items-center justify-center text-brand-teal text-2xl group-hover:scale-110 transition-transform">
+                    <i class="fas fa-briefcase"></i>
+                </div>
+                <h3 class="text-xl font-bold text-brand-black mb-2">Bisnis</h3>
+                <p class="text-gray-500 text-sm">Keahlian komunikasi profesional.</p>
+            </div>
+
+            <!-- Card 3 -->
+            <div
+                class="group bg-brand-cream border border-orange-100 p-8 rounded-3xl text-center hover:bg-orange-100 hover:shadow-xl hover:shadow-brand-orange/10 transition-all cursor-pointer">
+                <div
+                    class="w-16 h-16 mx-auto mb-6 bg-orange-100 rounded-2xl flex items-center justify-center text-brand-orange text-2xl group-hover:scale-110 transition-transform">
+                    <i class="fas fa-graduation-cap"></i>
+                </div>
+                <h3 class="text-xl font-bold text-brand-black mb-2">Persiapan IELTS</h3>
+                <p class="text-gray-500 text-sm">Dapatkan skor yang dibutuhkan untuk universitas.</p>
+            </div>
+
+            <!-- Card 4 -->
+            <div
+                class="group bg-brand-cream border border-orange-100 p-8 rounded-3xl text-center hover:bg-orange-100 hover:shadow-xl hover:shadow-brand-orange/10 transition-all cursor-pointer">
+                <div
+                    class="w-16 h-16 mx-auto mb-6 bg-blue-100 rounded-2xl flex items-center justify-center text-blue-500 text-2xl group-hover:scale-110 transition-transform">
+                    <i class="fas fa-comments"></i>
+                </div>
+                <h3 class="text-xl font-bold text-brand-black mb-2">Percakapan</h3>
+                <p class="text-gray-500 text-sm">Berbicara dengan percaya diri sehari-hari.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="max-w-7xl mx-auto px-6 mb-20">
+        <div
+            class="bg-brand-teal rounded-[3rem] p-12 md:p-24 text-center relative overflow-hidden shadow-2xl shadow-brand-teal/20">
+            <div class="relative z-10 space-y-8 max-w-3xl mx-auto">
+                <h2 class="text-4xl md:text-5xl lg:text-6xl font-heading font-bold text-white leading-tight">Siap
+                    Menguasai Bahasa Inggris?</h2>
+                <p class="text-white/90 max-w-xl mx-auto text-xl leading-relaxed">Bergabunglah dengan lebih dari 10.000
+                    siswa yang mencapai tujuan mereka. Dapatkan akses tanpa batas ke semua kursus dan tutor langsung.
+                </p>
+                <div class="flex flex-col sm:flex-row gap-4 justify-center pt-4">
+                    <a href="register.html"
+                        class="px-10 py-5 rounded-full bg-brand-orange text-white font-bold text-lg hover:bg-brand-orange-hover transition-all shadow-xl shadow-brand-orange/20 hover:-translate-y-1">Mulai
+                        Gratis Sekarang</a>
+                </div>
+                <p class="text-sm text-white/70 mt-4"><i class="fas fa-check-circle mr-2"></i>Tanpa kartu kredit</p>
+            </div>
+
+            <!-- Background Pattern -->
+            <div class="absolute top-0 left-0 w-full h-full opacity-10"
+                style="background-image: radial-gradient(#fff 2px, transparent 2px); background-size: 30px 30px;"></div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-brand-black text-white pt-20 pb-10">
+        <div class="max-w-7xl mx-auto px-6 grid md:grid-cols-4 gap-12 mb-16">
+            <!-- Brand -->
+            <div class="space-y-6">
+                <div class="flex items-center gap-2">
+                    <img src="assets/images/logo.png" alt="BelajarMas" class="w-10 h-10 object-contain">
+                    <span class="text-3xl font-heading font-bold">BelajarMas</span>
+                </div>
+                <p class="text-gray-400 text-sm leading-relaxed max-w-xs">
+                    Memberdayakan siswa di seluruh dunia dengan pendidikan bahasa Inggris premium dan terakreditasi.
+                </p>
+                <div class="flex gap-4">
+                    <a href="https://www.instagram.com/soe_akhiyat/" target="_blank"
+                        class="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center text-white hover:bg-brand-teal transition-all"><i
+                            class="fab fa-instagram"></i></a>
+                    <a href="https://x.com/Akhiyatsss" target="_blank"
+                        class="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center text-white hover:bg-brand-teal transition-all"><i
+                            class="fab fa-twitter"></i></a>
+                    <a href="https://www.linkedin.com/in/supardi-akhiyat-8b4582ab/" target="_blank"
+                        class="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center text-white hover:bg-brand-teal transition-all"><i
+                            class="fab fa-linkedin-in"></i></a>
+                </div>
+            </div>
+
+            <!-- Links -->
+            <div>
+                <h4 class="font-bold text-lg mb-6 text-brand-teal">Platform</h4>
+                <ul class="space-y-4 text-gray-400 text-sm">
+                    <li><a href="index.html" class="hover:text-white transition-colors">Beranda</a></li>
+                    <li><a href="#categories" class="hover:text-white transition-colors">Semua Kursus</a></li>
+                </ul>
+            </div>
+
+            <!-- Links -->
+            <div>
+                <h4 class="font-bold text-lg mb-6 text-brand-teal">Tentang Saya</h4>
+                <ul class="space-y-4 text-gray-400 text-sm">
+                    <li>Supardi Akhiyat</li>
+                    <li>Universitas Siber Asia</li>
+                    <li>Sistem Informasi</li>
+                    <li>230101010026</li>
+                </ul>
+            </div>
+
+            <!-- Newsletter -->
+            <div>
+                <h4 class="font-bold text-lg mb-6 text-brand-teal">Tetap Terupdate</h4>
+                <p class="text-gray-400 text-sm mb-4">Kursus baru dan tips langsung ke kotak masukmu.</p>
+                <form class="flex group">
+                    <input type="email" placeholder="Email Anda"
+                        class="w-full bg-white/5 border border-white/10 px-4 py-3 rounded-l-xl focus:outline-none focus:border-brand-teal text-sm transition-colors text-white placeholder-gray-500">
+                    <button
+                        class="bg-brand-teal text-white px-5 rounded-r-xl hover:bg-brand-teal-dark transition-colors"><i
+                            class="fas fa-paper-plane"></i></button>
+                </form>
+            </div>
+        </div>
+
+        <div
+            class="max-w-7xl mx-auto px-6 pt-8 border-t border-white/10 flex flex-col md:flex-row justify-between items-center text-sm text-gray-500">
+            <p>&copy; 2026 BelajarMas Inc. Hak Cipta Dilindungi.</p>
+            <div class="flex gap-6 mt-4 md:mt-0">
+                <a href="#" class="hover:text-white transition-colors">Privasi</a>
+                <a href="#" class="hover:text-white transition-colors">Syarat & Ketentuan</a>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Mobile Menu Toggle
+        const menuBtn = document.getElementById('mobile-menu-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
+
+        menuBtn.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+        });
+    </script>
+</body>
+
+</html>

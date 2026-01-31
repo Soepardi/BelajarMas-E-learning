@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dasbor Guru - BelajarMas</title>
+    <link rel="icon" type="image/x-icon" href="assets/images/icon.ico">
+    <!-- Google Fonts -->
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700&display=swap"
+        rel="stylesheet">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="assets/css/style.css">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+
+<body class="bg-white text-brand-black min-h-screen font-sans">
+
+    <!-- Background Elements -->
+    <div class="fixed inset-0 -z-10 overflow-hidden pointer-events-none">
+        <div class="absolute top-[0%] left-[20%] w-[40%] h-[40%] bg-brand-teal/5 rounded-full blur-[120px]"></div>
+        <div class="absolute bottom-[0%] right-[0%] w-[30%] h-[30%] bg-brand-orange/5 rounded-full blur-[100px]"></div>
+    </div>
+
+    <div id="app" class="flex min-h-screen">
+        <!-- Sidebar container -->
+        <div id="sidebar-container"></div>
+
+        <main class="flex-1 md:ml-64 relative w-full">
+            <!-- Mobile Header -->
+            <div id="mobile-header-container"></div>
+
+            <div class="p-6 md:p-10 max-w-7xl mx-auto space-y-8">
+
+                <!-- Welcome Section -->
+                <header class="flex flex-col md:flex-row md:items-center justify-between gap-4 animate-fade-in">
+                    <div>
+                        <h1 class="text-3xl font-heading font-bold text-brand-black mb-2">Halo, <span id="userName"
+                                class="text-brand-orange">Guru</span> 👋</h1>
+                        <p class="text-gray-500">Kelola siswa dan pelajaran Anda.</p>
+                    </div>
+                    <button onclick="document.getElementById('createLessonModal').classList.remove('hidden')"
+                        class="bg-brand-teal hover:bg-brand-teal-dark text-white px-6 py-2.5 rounded-xl font-medium shadow-lg shadow-brand-teal/20 transition-all flex items-center gap-2">
+                        <i class="fas fa-plus"></i> Buat Pelajaran Baru
+                    </button>
+                </header>
+
+                <!-- Stats Grid -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 animate-fade-in" style="animation-delay: 0.1s;">
+                    <div class="bg-white p-6 rounded-2xl flex items-center gap-4 shadow-sm border border-gray-100">
+                        <div class="w-12 h-12 rounded-xl bg-cyan-50 flex items-center justify-center text-cyan-600">
+                            <i class="fas fa-users text-xl"></i>
+                        </div>
+                        <div>
+                            <p class="text-gray-500 text-sm">Total Siswa</p>
+                            <h3 class="text-2xl font-bold font-heading text-brand-black">156</h3>
+                        </div>
+                    </div>
+                    <div class="bg-white p-6 rounded-2xl flex items-center gap-4 shadow-sm border border-gray-100">
+                        <div class="w-12 h-12 rounded-xl bg-purple-50 flex items-center justify-center text-purple-600">
+                            <i class="fas fa-book-open text-xl"></i>
+                        </div>
+                        <div>
+                            <p class="text-gray-500 text-sm">Pelajaran Aktif</p>
+                            <h3 class="text-2xl font-bold font-heading text-brand-black">32</h3>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Recent Lessons Table -->
+                <section class="animate-fade-in" style="animation-delay: 0.2s;">
+                    <h2 class="text-xl font-heading font-semibold text-brand-black mb-6">Kelola Pelajaran</h2>
+                    <div class="bg-white rounded-2xl overflow-hidden shadow-sm border border-gray-100">
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-left">
+                                <thead
+                                    class="bg-gray-50 border-b border-gray-100 text-gray-500 text-sm uppercase tracking-wider">
+                                    <tr>
+                                        <th class="px-6 py-4 font-medium">Judul Pelajaran</th>
+                                        <th class="px-6 py-4 font-medium">Kategori</th>
+                                        <th class="px-6 py-4 font-medium">Siswa</th>
+                                        <th class="px-6 py-4 font-medium">Status</th>
+                                        <th class="px-6 py-4 font-medium text-right">Aksi</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="lessonsTableBody" class="divide-y divide-gray-100 text-sm">
+                                    <!-- Dynamic content will be loaded here -->
+                                    <tr class="animate-pulse">
+                                        <td colspan="5" class="px-6 py-4 text-center text-gray-400">Memuat pelajaran...
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </main>
+    </div>
+
+    <!-- Create Lesson Modal -->
+    <div id="createLessonModal"
+        class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm animate-fade-in">
+        <div class="w-full max-w-2xl bg-white rounded-2xl p-8 relative shadow-2xl">
+            <button onclick="closeCreateLessonModal()" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600">
+                <i class="fas fa-times text-xl"></i>
+            </button>
+            <h2 class="text-2xl font-heading font-bold text-brand-black mb-6">Buat Pelajaran Baru</h2>
+
+            <form id="lessonForm" class="space-y-6">
+                <input type="hidden" id="editLessonId">
+                <input type="hidden" id="currentVideoUrl">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Judul</label>
+                        <input type="text" id="lessonTitle" required
+                            class="w-full bg-gray-50 border border-gray-200 rounded-lg px-4 py-3 text-gray-800 focus:outline-none focus:border-brand-teal focus:ring-1 focus:ring-brand-teal">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Kategori</label>
+                        <select id="lessonCategory"
+                            class="w-full bg-gray-50 border border-gray-200 rounded-lg px-4 py-3 text-gray-800 focus:outline-none focus:border-brand-teal focus:ring-1 focus:ring-brand-teal">
+                            <option value="grammar">Tata Bahasa</option>
+                            <option value="vocabulary">Kosakata</option>
+                            <option value="business">Bisnis</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Deskripsi</label>
+                    <textarea id="lessonDesc" rows="3"
+                        class="w-full bg-gray-50 border border-gray-200 rounded-lg px-4 py-3 text-gray-800 focus:outline-none focus:border-brand-teal focus:ring-1 focus:ring-brand-teal"></textarea>
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Materi Pelajaran (Video/Audio)</label>
+                    <div class="flex gap-4 mb-4">
+                        <label class="flex items-center gap-2 cursor-pointer">
+                            <input type="radio" name="videoSource" value="upload" checked
+                                class="text-brand-teal focus:ring-brand-teal" onchange="toggleVideoInput()">
+                            <span class="text-sm text-gray-600">Unggah File</span>
+                        </label>
+                        <label class="flex items-center gap-2 cursor-pointer">
+                            <input type="radio" name="videoSource" value="youtube"
+                                class="text-brand-teal focus:ring-brand-teal" onchange="toggleVideoInput()">
+                            <span class="text-sm text-gray-600">URL YouTube</span>
+                        </label>
+                    </div>
+
+                    <!-- File Upload Input -->
+                    <div id="uploadInput"
+                        class="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:bg-gray-50 transition-colors cursor-pointer relative group">
+                        <input type="file" id="videoFile" accept="video/*,audio/*"
+                            class="absolute inset-0 opacity-0 cursor-pointer">
+                        <i
+                            class="fas fa-cloud-upload-alt text-3xl text-gray-400 group-hover:text-brand-teal mb-2 transition-colors"></i>
+                        <p class="text-gray-500 text-sm">Seret & Lepas atau Klik untuk Mengunggah (Video/Audio)</p>
+                        <p id="fileName" class="text-brand-teal text-xs mt-2"></p>
+                    </div>
+
+                    <!-- YouTube URL Input -->
+                    <div id="youtubeInput" class="hidden">
+                        <input type="url" id="customVideoUrl" placeholder="https://www.youtube.com/watch?v=..."
+                            class="w-full bg-gray-50 border border-gray-200 rounded-lg px-4 py-3 text-gray-800 focus:outline-none focus:border-brand-teal focus:ring-1 focus:ring-brand-teal">
+                        <p class="text-xs text-gray-400 mt-1">Tempel URL video YouTube lengkap di sini.</p>
+                    </div>
+                </div>
+
+                <div class="flex justify-end gap-3 pt-4 border-t border-gray-100">
+                    <button type="button" onclick="closeCreateLessonModal()"
+                        class="px-6 py-2.5 rounded-lg border border-gray-200 hover:bg-gray-50 text-gray-600 font-medium transition-colors">Batal</button>
+                    <button type="submit"
+                        class="bg-brand-teal hover:bg-brand-teal-dark text-white px-6 py-2.5 rounded-lg font-medium shadow-lg shadow-brand-teal/20 transition-all">
+                        <span id="submitBtnText">Buat Pelajaran</span>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script type="module">
+        import { renderSidebar, renderMobileHeader } from './assets/js/components.js';
+        import { checkSession, signOut } from './assets/js/auth.js';
+        import { supabase } from './assets/js/supabaseClient.js';
+
+        // Expose toggle function to window
+        window.toggleVideoInput = () => {
+            const source = document.querySelector('input[name="videoSource"]:checked').value;
+            const uploadInput = document.getElementById('uploadInput');
+            const youtubeInput = document.getElementById('youtubeInput');
+
+            if (source === 'upload') {
+                uploadInput.classList.remove('hidden');
+                youtubeInput.classList.add('hidden');
+            } else {
+                uploadInput.classList.add('hidden');
+                youtubeInput.classList.remove('hidden');
+            }
+        };
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            const session = await checkSession();
+            document.getElementById('sidebar-container').innerHTML = renderSidebar('dashboard', 'teacher');
+            document.getElementById('mobile-header-container').innerHTML = renderMobileHeader();
+
+            if (session?.user) {
+                document.getElementById('userName').textContent = session.user.user_metadata.full_name || 'Guru';
+            }
+
+            const logoutBtn = document.getElementById('logoutBtn');
+            if (logoutBtn) logoutBtn.addEventListener('click', signOut);
+
+            const videoFile = document.getElementById('videoFile');
+            videoFile.addEventListener('change', (e) => {
+                const file = e.target.files[0];
+                if (file) document.getElementById('fileName').textContent = file.name;
+            });
+
+            // Fetch and Render Lessons
+            async function fetchLessons() {
+                const tbody = document.getElementById('lessonsTableBody');
+
+                const { data: lessons, error } = await supabase
+                    .from('lessons')
+                    .select('*')
+                    .eq('created_by', session.user.id)
+                    .order('created_at', { ascending: false });
+
+                if (error) {
+                    console.error('Error fetching lessons:', error);
+                    tbody.innerHTML = '<tr><td colspan="5" class="px-6 py-4 text-center text-red-500">Gagal memuat pelajaran</td></tr>';
+                    return;
+                }
+
+                if (lessons.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="5" class="px-6 py-4 text-center text-gray-500">Belum ada pelajaran yang dibuat.</td></tr>';
+                    // Update stats
+                    document.querySelector('.fa-book-open').closest('.bg-white').querySelector('h3').textContent = '0';
+                    return;
+                }
+
+                // Update Stats
+                document.querySelector('.fa-book-open').closest('.bg-white').querySelector('h3').textContent = lessons.length;
+
+                tbody.innerHTML = lessons.map(lesson => `
+                    <tr class="hover:bg-gray-50 transition-colors">
+                        <td class="px-6 py-4 font-medium text-gray-900">${lesson.title}</td>
+                        <td class="px-6 py-4 text-gray-500">${lesson.category || 'Umum'}</td>
+                        <td class="px-6 py-4 text-gray-900">-</td> 
+                        <td class="px-6 py-4"><span class="px-2 py-1 rounded bg-green-100 text-green-700 text-xs font-bold">Aktif</span></td>
+                        <td class="px-6 py-4 text-right">
+                            <button onclick="editLesson('${lesson.id}')" class="text-gray-400 hover:text-brand-teal mx-1" title="Edit">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button onclick="deleteLesson('${lesson.id}')" class="text-red-300 hover:text-red-500 mx-1" title="Hapus">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </td>
+                    </tr>
+                `).join('');
+            }
+
+            fetchLessons();
+
+            // Global Delete Function
+            window.deleteLesson = async (id) => {
+                if (!confirm('Apakah Anda yakin ingin menghapus pelajaran ini? Tindakan ini tidak dapat dibatalkan.')) return;
+
+                try {
+                    const { error } = await supabase
+                        .from('lessons')
+                        .delete()
+                        .eq('id', id);
+
+                    if (error) throw error;
+
+                    fetchLessons(); // Refresh list
+                } catch (err) {
+                    console.error(err);
+                    alert('Gagal menghapus pelajaran: ' + err.message);
+                }
+            };
+
+            window.editLesson = async (id) => {
+                try {
+                    const { data: lesson, error } = await supabase
+                        .from('lessons')
+                        .select('*')
+                        .eq('id', id)
+                        .single();
+
+                    if (error) throw error;
+
+                    // Populate Form
+                    document.getElementById('editLessonId').value = lesson.id;
+                    document.getElementById('lessonTitle').value = lesson.title;
+                    document.getElementById('lessonCategory').value = lesson.category;
+                    document.getElementById('lessonDesc').value = lesson.description;
+                    document.getElementById('currentVideoUrl').value = lesson.video_url || '';
+
+                    // Handle Video UI
+                    const isYouTube = lesson.video_url && (lesson.video_url.includes('youtube.com') || lesson.video_url.includes('youtu.be'));
+
+                    if (isYouTube) {
+                        document.querySelector('input[name="videoSource"][value="youtube"]').checked = true;
+                        document.getElementById('customVideoUrl').value = lesson.video_url;
+                        toggleVideoInput();
+                    } else {
+                        document.querySelector('input[name="videoSource"][value="upload"]').checked = true;
+                        if (lesson.video_url) {
+                            document.getElementById('fileName').textContent = "Current: " + lesson.video_url.split('/').pop();
+                        }
+                        toggleVideoInput();
+                    }
+
+                    // Update Modal UI
+                    document.getElementById('submitBtnText').textContent = 'Perbarui Pelajaran';
+                    document.querySelector('.bg-white h2').textContent = 'Edit Pelajaran';
+
+                    const modal = document.getElementById('createLessonModal');
+                    modal.classList.remove('hidden');
+
+                } catch (err) {
+                    console.error('Error fetching lesson:', err);
+                    alert('Gagal memuat pelajaran untuk diedit');
+                }
+            };
+
+            window.closeCreateLessonModal = () => {
+                const modal = document.getElementById('createLessonModal');
+                modal.classList.add('hidden');
+                document.getElementById('lessonForm').reset();
+                document.getElementById('editLessonId').value = '';
+                document.getElementById('currentVideoUrl').value = '';
+                document.getElementById('fileName').textContent = '';
+                document.getElementById('submitBtnText').textContent = 'Buat Pelajaran';
+                document.querySelector('.bg-white h2').textContent = 'Buat Pelajaran Baru';
+                document.querySelector('input[name="videoSource"][value="upload"]').checked = true;
+                toggleVideoInput();
+            };
+
+            document.getElementById('lessonForm').addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const btn = e.target.querySelector('button[type="submit"]');
+                const originalText = btn.innerHTML;
+
+                btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Menyimpan...';
+                btn.disabled = true;
+
+                try {
+                    const lessonId = document.getElementById('editLessonId').value;
+                    const videoSource = document.querySelector('input[name="videoSource"]:checked').value;
+                    let videoUrl = document.getElementById('currentVideoUrl').value;
+
+                    if (videoSource === 'upload') {
+                        const file = videoFile.files[0];
+                        // If file is selected, upload it. If not, keep existing videoUrl (unless in 'upload' mode and no file, then it might be null for new, or exist for edit)
+                        // Actually, if update and no file, videoUrl remains same. 
+
+                        if (file) {
+                            const fileExt = file.name.split('.').pop();
+                            const fileName = `${Math.random()}.${fileExt}`;
+                            const filePath = `content/${fileName}`;
+
+                            let contentType = file.type;
+                            if (!contentType) {
+                                if (fileExt === 'mp3') contentType = 'audio/mpeg';
+                                else if (fileExt === 'wav') contentType = 'audio/wav';
+                                else if (fileExt === 'ogg') contentType = 'audio/ogg';
+                                else if (fileExt === 'm4a') contentType = 'audio/mp4';
+                            }
+
+                            const { data: uploadData, error: uploadError } = await supabase.storage
+                                .from('media')
+                                .upload(filePath, file, {
+                                    cacheControl: '3600',
+                                    upsert: false,
+                                    contentType: contentType
+                                });
+
+                            if (uploadError) throw uploadError;
+                            const { data: { publicUrl } } = supabase.storage.from('media').getPublicUrl(filePath);
+                            videoUrl = publicUrl;
+                        }
+                    } else {
+                        // YouTube URL
+                        videoUrl = document.getElementById('customVideoUrl').value;
+                        if (!videoUrl) throw new Error("Mohon masukkan URL YouTube");
+                    }
+
+                    const title = document.getElementById('lessonTitle').value;
+                    const description = document.getElementById('lessonDesc').value;
+                    const category = document.getElementById('lessonCategory').value;
+
+                    if (lessonId) {
+                        // UPDATE
+                        const { error } = await supabase
+                            .from('lessons')
+                            .update({
+                                title,
+                                description,
+                                category,
+                                video_url: videoUrl
+                            })
+                            .eq('id', lessonId);
+
+                        if (error) throw error;
+                        alert('Pelajaran Berhasil Diperbarui!');
+                    } else {
+                        // INSERT
+                        const { error: dbError } = await supabase.from('lessons').insert([{
+                            title,
+                            description,
+                            category,
+                            video_url: videoUrl,
+                            created_by: session?.user?.id
+                        }]);
+
+                        if (dbError) throw dbError;
+                        alert('Pelajaran Berhasil Dibuat!');
+                    }
+
+                    closeCreateLessonModal();
+                    // Optional: Reload or update list
+                    fetchLessons();
+
+                } catch (err) {
+                    console.error(err);
+                    alert('Gagal membuat pelajaran: ' + (err.message || 'Error tidak diketahui'));
+                } finally {
+                    btn.innerHTML = originalText;
+                    btn.disabled = false;
+                }
+            });
+        });
+    </script>
+</body>
+
+</html>

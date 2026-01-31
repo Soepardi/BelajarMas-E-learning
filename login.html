@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Masuk - BelajarMas</title>
+    <link rel="icon" type="image/x-icon" href="assets/images/icon.ico">
+    <!-- Google Fonts -->
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700&display=swap"
+        rel="stylesheet">
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="assets/css/style.css">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+
+<body class="bg-white min-h-screen font-sans">
+
+    <!-- Main Container: Grid for perfect 50/50 split on desktop -->
+    <div class="min-h-screen w-full grid md:grid-cols-2">
+
+        <!-- Left Side: Form Section -->
+        <div
+            class="bg-white flex flex-col justify-center p-8 md:p-12 lg:p-16 relative animate-fade-in order-2 md:order-1">
+            <!-- Back Button -->
+            <div class="w-full max-w-md mx-auto mb-8">
+                <a href="index.html"
+                    class="inline-flex items-center gap-2 text-gray-500 hover:text-brand-teal transition-colors font-medium group">
+                    <div
+                        class="w-8 h-8 rounded-full bg-gray-50 flex items-center justify-center group-hover:bg-brand-teal/10 transition-colors">
+                        <i class="fas fa-arrow-left text-sm group-hover:-translate-x-0.5 transition-transform"></i>
+                    </div>
+                    <span>Kembali ke Beranda</span>
+                </a>
+            </div>
+
+            <!-- Content -->
+            <div class="w-full max-w-md mx-auto">
+                <div class="mb-10 text-center md:text-left">
+                    <h1 class="text-3xl font-heading font-bold text-gray-900 mb-2">Selamat Datang Kembali!</h1>
+                    <p class="text-gray-500">Masukkan Email dan Password untuk mengakses akun Anda.</p>
+                </div>
+
+                <form id="loginForm" class="space-y-5">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1.5">Alamat Email</label>
+                        <div class="relative">
+                            <span class="absolute left-4 top-3.5 text-gray-400"><i class="fas fa-envelope"></i></span>
+                            <input type="email" id="email" required placeholder="nama@contoh.com"
+                                class="w-full bg-gray-50 border border-gray-200 rounded-xl py-3 pl-11 pr-4 focus:outline-none focus:border-brand-teal focus:ring-2 focus:ring-brand-teal/20 transition-all text-gray-800 placeholder-gray-400">
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1.5">Kata Sandi</label>
+                        <div class="relative">
+                            <span class="absolute left-4 top-3.5 text-gray-400"><i class="fas fa-lock"></i></span>
+                            <input type="password" id="password" required placeholder="••••••••"
+                                class="w-full bg-gray-50 border border-gray-200 rounded-xl py-3 pl-11 pr-4 focus:outline-none focus:border-brand-teal focus:ring-2 focus:ring-brand-teal/20 transition-all text-gray-800 placeholder-gray-400">
+                        </div>
+                    </div>
+
+                    <div class="flex items-center justify-between text-sm">
+                        <label class="flex items-center gap-2 cursor-pointer select-none">
+                            <input type="checkbox"
+                                class="w-4 h-4 rounded text-brand-teal focus:ring-brand-teal border-gray-300">
+                            <span class="text-gray-500">Ingat saya</span>
+                        </label>
+                        <a href="#" class="text-brand-teal font-medium hover:underline">Lupa kata sandi?</a>
+                    </div>
+
+                    <button type="submit"
+                        class="w-full bg-brand-teal hover:bg-brand-teal-dark text-white py-3.5 rounded-xl font-bold text-lg shadow-lg shadow-brand-teal/20 hover:shadow-brand-teal/30 transition-all transform hover:-translate-y-0.5">
+                        Masuk
+                    </button>
+                </form>
+
+                <p class="text-center mt-8 text-gray-500">
+                    Belum punya akun? <a href="register.html" class="text-brand-teal font-bold hover:underline">Buat
+                        akun gratis</a>
+                </p>
+            </div>
+        </div>
+
+        <!-- Right Side: Visual Section -->
+        <div class="hidden md:flex relative items-center justify-center overflow-hidden order-1 md:order-2 bg-cover bg-center"
+            style="background-image: url('../assets/images/1.jpg');">
+            <!-- Overlay -->
+            <div class="absolute inset-0 bg-gradient-to-br from-brand-teal/90 to-brand-teal-dark/90 mix-blend-multiply">
+            </div>
+
+            <!-- Content -->
+            <div class="relative z-10 w-full max-w-lg text-center p-12">
+                <div
+                    class="mb-6 inline-flex items-center justify-center w-16 h-16 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 text-white shadow-xl">
+                    <i class="fas fa-quote-left text-2xl"></i>
+                </div>
+
+                <h2 class="text-3xl lg:text-4xl font-heading font-bold text-white mb-6 leading-tight">
+                    "Pendidikan adalah paspor menuju masa depan."
+                </h2>
+                <p class="text-white/80 text-lg font-light leading-relaxed mb-8">
+                    Bergabunglah dengan komunitas ribuan siswa yang menguasai bahasa dan keterampilan baru setiap hari
+                    di BelajarMas.
+                </p>
+
+                <!-- Stats/Social Proof -->
+                <div class="flex items-center justify-center gap-4 text-white/90 text-sm font-medium">
+                    <div class="flex items-center gap-2">
+                        <i class="fas fa-check-circle text-brand-orange"></i>
+                        <span>Kursus Terverifikasi</span>
+                    </div>
+                    <div class="w-1 h-1 rounded-full bg-white/40"></div>
+                    <div class="flex items-center gap-2">
+                        <i class="fas fa-user-friends text-brand-orange"></i>
+                        <span>Komunitas Aktif</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script type="module" src="assets/js/supabaseClient.js"></script>
+    <script type="module" src="assets/js/auth.js"></script>
+    <script type="module">
+        import { signIn } from './assets/js/auth.js';
+
+        document.getElementById('loginForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            signIn(email, password);
+        });
+    </script>
+</body>
+
+</html>

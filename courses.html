@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kursus Saya - BelajarMas</title>
+    <link rel="icon" type="image/x-icon" href="assets/images/icon.ico">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/style.css">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+
+<body class="bg-white text-brand-black min-h-screen font-sans">
+    <div id="app" class="flex min-h-screen">
+        <div id="sidebar-container"></div>
+        <main class="flex-1 md:ml-64 relative w-full">
+            <div id="mobile-header-container"></div>
+            <div class="p-6 md:p-10 max-w-7xl mx-auto space-y-8 animate-fade-in">
+                <header>
+                    <h1 class="text-3xl font-heading font-bold text-brand-black mb-2">Kursus Saya</h1>
+                    <p class="text-gray-500">Lanjutkan belajar dari tempat terakhir Anda berhenti.</p>
+                </header>
+
+                <div id="coursesGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <!-- Loading State -->
+                    <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 animate-pulse">
+                        <div class="aspect-video bg-gray-100 rounded-xl mb-4"></div>
+                        <div class="h-4 bg-gray-100 rounded w-3/4 mb-2"></div>
+                        <div class="h-3 bg-gray-100 rounded w-1/2"></div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+    <script type="module">
+        import { renderSidebar, renderMobileHeader } from './assets/js/components.js';
+        import { checkSession, signOut } from './assets/js/auth.js';
+        import { supabase } from './assets/js/supabaseClient.js';
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            const session = await checkSession();
+            document.getElementById('sidebar-container').innerHTML = renderSidebar('courses', 'student');
+            document.getElementById('mobile-header-container').innerHTML = renderMobileHeader();
+            document.getElementById('logoutBtn')?.addEventListener('click', signOut);
+
+            // 1. Fetch All Lessons
+            const { data: lessons, error: lessonsError } = await supabase
+                .from('lessons')
+                .select('*')
+                .order('created_at', { ascending: false });
+
+            // 2. Fetch User's Enrollments (Progress)
+            const { data: progressData, error: progressError } = await supabase
+                .from('progress')
+                .select('lesson_id')
+                .eq('student_id', session.user.id);
+
+            const grid = document.getElementById('coursesGrid');
+
+            if (lessonsError || !lessons) {
+                grid.innerHTML = '<p class="text-red-500">Gagal memuat kursus.</p>';
+            } else {
+                // Create a Set of enrolled lesson IDs for O(1) lookup
+                const enrolledLessonIds = new Set(progressData?.map(p => p.lesson_id) || []);
+
+                grid.innerHTML = lessons.map(lesson => {
+                    const isEnrolled = enrolledLessonIds.has(lesson.id);
+
+                    // Button Logic
+                    const buttonHtml = isEnrolled
+                        ? `<a href="lesson.html?id=${lesson.id}" class="block w-full text-center bg-gray-50 hover:bg-brand-teal hover:text-white text-gray-700 py-2.5 rounded-xl text-sm font-medium transition-all shadow-sm">
+                            <i class="fas fa-play mr-2"></i> Lanjutkan Belajar
+                           </a>`
+                        : `<button onclick="enroll('${lesson.id}', this)" class="w-full text-center bg-brand-teal hover:bg-brand-teal-dark text-white py-2.5 rounded-xl text-sm font-bold transition-all shadow-lg shadow-brand-teal/20 hover:-translate-y-0.5">
+                            Daftar Sekarang
+                           </button>`;
+
+                    return `
+                    <div class="bg-white p-5 rounded-2xl shadow-sm hover:shadow-xl hover:shadow-brand-teal/5 border border-gray-100 hover:border-brand-teal/20 transition-all group flex flex-col h-full">
+                        <div class="aspect-video rounded-xl bg-gray-100 mb-4 relative overflow-hidden flex items-center justify-center shrink-0">
+                            <i class="fas fa-play-circle text-4xl text-brand-teal/50 group-hover:text-brand-orange transition-colors"></i>
+                        </div>
+                        <div class="flex-1">
+                            <span class="text-xs font-bold text-brand-teal tracking-wider uppercase mb-1 block">${lesson.category || 'Umum'}</span>
+                            <h3 class="text-lg font-bold text-brand-black mb-2 line-clamp-1" title="${lesson.title}">${lesson.title}</h3>
+                            <p class="text-gray-500 text-sm mb-4 line-clamp-2">${lesson.description}</p>
+                        </div>
+                        <div class="mt-auto pt-4 border-t border-gray-100">
+                           ${buttonHtml}
+                        </div>
+                    </div>
+                `}).join('');
+            }
+        });
+
+        // Global Enroll Function
+        window.enroll = async (lessonId, btn) => {
+            const { data: { user } } = await supabase.auth.getUser();
+            if (!user) return alert('Silakan masuk terlebih dahulu');
+
+            const originalText = btn.innerHTML;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+            btn.disabled = true;
+
+            try {
+                const { error } = await supabase
+                    .from('progress')
+                    .insert([{ student_id: user.id, lesson_id: lessonId, status: 'started' }]);
+
+                if (error) throw error;
+
+                // Refresh to update UI
+                window.location.reload();
+            } catch (err) {
+                console.error(err);
+                alert('Gagal mendaftar: ' + err.message);
+                btn.innerHTML = originalText;
+                btn.disabled = false;
+            }
+        };
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,18 @@
+{
+  "name": "elearning",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "npx serve .",
+    "build:css": "npx @tailwindcss/cli -i ./assets/css/input.css -o ./assets/css/style.css --content \"./**/*.{html,js}\"",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@tailwindcss/cli": "^4.1.18",
+    "tailwindcss": "^4.1.18"
+  }
+}

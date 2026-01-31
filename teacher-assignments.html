@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kelola Tugas - BelajarMas</title>
+    <link rel="icon" type="image/x-icon" href="assets/images/icon.ico">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/style.css">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+
+<body class="bg-white text-brand-black min-h-screen font-sans">
+    <div id="app" class="flex min-h-screen">
+        <div id="sidebar-container"></div>
+        <main class="flex-1 md:ml-64 relative w-full">
+            <div id="mobile-header-container"></div>
+            <div class="p-6 md:p-10 max-w-7xl mx-auto space-y-8 animate-fade-in">
+                <header>
+                    <h1 class="text-3xl font-heading font-bold text-brand-black mb-2">Kelola Tugas</h1>
+                    <p class="text-gray-500">Pantau penyerahan siswa dan nilai latihan.</p>
+                </header>
+
+                <div class="bg-white rounded-2xl overflow-hidden shadow-sm border border-gray-100">
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left">
+                            <thead
+                                class="bg-gray-50 border-b border-gray-100 text-gray-500 text-sm uppercase tracking-wider">
+                                <tr>
+                                    <th class="px-6 py-4 font-medium">Siswa</th>
+                                    <th class="px-6 py-4 font-medium">Pelajaran</th>
+                                    <th class="px-6 py-4 font-medium">Selesai Pada</th>
+                                    <th class="px-6 py-4 font-medium">Status</th>
+                                </tr>
+                            </thead>
+                            <tbody id="assignmentsTableBody" class="divide-y divide-gray-100 text-sm">
+                                <tr class="animate-pulse">
+                                    <td colspan="4" class="px-6 py-4 text-center text-gray-400">Memuat data...</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+    <script type="module">
+        import { renderSidebar, renderMobileHeader } from './assets/js/components.js';
+        import { checkSession, signOut } from './assets/js/auth.js';
+        import { supabase } from './assets/js/supabaseClient.js';
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            const session = await checkSession();
+
+            if (!session) {
+                window.location.href = 'login.html';
+                return;
+            }
+
+            const role = session.user?.user_metadata?.role || 'student';
+            if (role !== 'teacher') {
+                window.location.href = 'student-dashboard.html';
+                return;
+            }
+
+            document.getElementById('sidebar-container').innerHTML = renderSidebar('assignments', role);
+            document.getElementById('mobile-header-container').innerHTML = renderMobileHeader();
+            document.getElementById('logoutBtn')?.addEventListener('click', signOut);
+
+            async function fetchSubmissions() {
+                const tbody = document.getElementById('assignmentsTableBody');
+
+                // 1. Get Teacher's Lessons
+                const { data: myLessons } = await supabase
+                    .from('lessons')
+                    .select('id, title')
+                    .eq('created_by', session.user.id);
+
+                if (!myLessons || myLessons.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="4" class="px-6 py-4 text-center text-gray-500">Tidak ada pelajaran ditemukan.</td></tr>';
+                    return;
+                }
+
+                const myLessonIds = myLessons.map(l => l.id);
+                const lessonMap = Object.fromEntries(myLessons.map(l => [l.id, l.title]));
+
+                // 2. Fetch Completed Progress
+                const { data: progress, error } = await supabase
+                    .from('progress')
+                    .select(`
+                        id,
+                        student_id,
+                        lesson_id,
+                        status,
+                        completed_at,
+                        profiles:student_id (full_name, email)
+                    `)
+                    .in('lesson_id', myLessonIds)
+                    .eq('status', 'completed')
+                    .order('completed_at', { ascending: false });
+
+                if (error) {
+                    console.error('Error:', error);
+                    tbody.innerHTML = '<tr><td colspan="4" class="px-6 py-4 text-center text-red-500">Gagal memuat data (Masalah RLS Policy?)</td></tr>';
+                    return;
+                }
+
+                if (!progress || progress.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="4" class="px-6 py-4 text-center text-gray-500">Belum ada tugas yang diselesaikan.</td></tr>';
+                    return;
+                }
+
+                tbody.innerHTML = progress.map(p => `
+                    <tr class="hover:bg-gray-50 transition-colors">
+                        <td class="px-6 py-4">
+                            <div class="font-medium text-gray-900">${p.profiles?.full_name || 'Tidak Diketahui'}</div>
+                            <div class="text-xs text-gray-500">${p.profiles?.email || ''}</div>
+                        </td>
+                        <td class="px-6 py-4 text-gray-900">${lessonMap[p.lesson_id] || 'Pelajaran Tidak Diketahui'}</td>
+                        <td class="px-6 py-4 text-gray-500">${p.completed_at ? new Date(p.completed_at).toLocaleDateString() : '-'}</td>
+                        <td class="px-6 py-4">
+                            <span class="px-2 py-1 rounded bg-green-100 text-green-700 text-xs font-bold">Selesai</span>
+                        </td>
+                    </tr>
+                `).join('');
+            }
+
+            fetchSubmissions();
+        });
+    </script>
+</body>
+
+</html>

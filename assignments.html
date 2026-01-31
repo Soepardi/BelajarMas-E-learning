@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tugas - BelajarMas</title>
+    <link rel="icon" type="image/x-icon" href="assets/images/icon.ico">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/style.css">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+
+<body class="bg-white text-brand-black min-h-screen font-sans">
+    <div id="app" class="flex min-h-screen">
+        <div id="sidebar-container"></div>
+        <main class="flex-1 md:ml-64 relative w-full">
+            <div id="mobile-header-container"></div>
+            <div class="p-6 md:p-10 max-w-7xl mx-auto space-y-8 animate-fade-in">
+                <header>
+                    <h1 class="text-3xl font-heading font-bold text-brand-black mb-2">Tugas</h1>
+                    <p class="text-gray-500">Selesaikan latihan untuk mendapatkan poin.</p>
+                </header>
+
+                <div
+                    class="bg-white rounded-2xl overflow-hidden p-6 text-center py-16 shadow-sm border border-gray-100">
+                    <div
+                        class="w-16 h-16 rounded-full bg-purple-50 flex items-center justify-center mx-auto mb-4 text-purple-500">
+                        <i class="fas fa-pen-fancy text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-brand-black mb-2">Tidak Ada Tugas Tertunda</h3>
+                    <p class="text-gray-500 max-w-md mx-auto">Anda sudah selesai! Periksa kembali nanti atau ulas
+                        pelajaran yang sudah selesai.</p>
+                </div>
+            </div>
+        </main>
+    </div>
+    <script type="module">
+        import { renderSidebar, renderMobileHeader } from './assets/js/components.js';
+        import { checkSession, signOut } from './assets/js/auth.js';
+        import { supabase } from './assets/js/supabaseClient.js';
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            const session = await checkSession();
+
+            if (!session) {
+                window.location.href = 'login.html';
+                return;
+            }
+
+            document.getElementById('sidebar-container').innerHTML = renderSidebar('assignments', 'student');
+            document.getElementById('mobile-header-container').innerHTML = renderMobileHeader();
+            document.getElementById('logoutBtn')?.addEventListener('click', signOut);
+
+            async function fetchAssignments() {
+                const contentDiv = document.querySelector('.bg-white.rounded-2xl');
+
+                // 1. Fetch Enrolled Lessons (Progress) to know what student has access to
+                const { data: enrollments, error: progressError } = await supabase
+                    .from('progress')
+                    .select('lesson_id, status, lessons(title)')
+                    .eq('student_id', session.user.id);
+
+                if (progressError) {
+                    console.error('Error fetching progress:', progressError);
+                    return;
+                }
+
+                if (!enrollments || enrollments.length === 0) {
+                    return; // Default empty state
+                }
+
+                const enrolledLessonIds = enrollments.map(e => e.lesson_id);
+                // Create a map for quick status lookup: lesson_id -> { status, title }
+                const lessonMap = {};
+                enrollments.forEach(e => {
+                    lessonMap[e.lesson_id] = {
+                        status: e.status,
+                        title: e.lessons?.title || 'Unknown Lesson'
+                    };
+                });
+
+                // 2. Fetch Exercises for these lessons
+                const { data: exercises, error: exercisesError } = await supabase
+                    .from('exercises')
+                    .select('id, lesson_id, type, content')
+                    .in('lesson_id', enrolledLessonIds)
+                    .order('created_at', { ascending: false });
+
+                if (exercisesError) {
+                    console.error('Error fetching exercises:', exercisesError);
+                    return;
+                }
+
+                if (!exercises || exercises.length === 0) {
+                    contentDiv.innerHTML = `
+                        <div class="text-center py-16">
+                            <div class="w-16 h-16 rounded-full bg-yellow-50 flex items-center justify-center mx-auto mb-4 text-yellow-500">
+                                <i class="fas fa-exclamation-triangle text-2xl"></i>
+                            </div>
+                            <h3 class="text-xl font-bold text-brand-black mb-2">Tidak Ada Latihan Ditemukan</h3>
+                            <p class="text-gray-500 max-w-md mx-auto">Pelajaran yang Anda ikuti belum memiliki latihan.</p>
+                        </div>
+                     `;
+                    return;
+                }
+
+                // Render Exercises
+                contentDiv.classList.remove('text-center', 'py-16');
+                contentDiv.innerHTML = `
+                    <div class="overflow-x-auto">
+                         <table class="w-full text-left">
+                            <thead class="bg-gray-50 border-b border-gray-100 text-gray-500 text-sm uppercase tracking-wider">
+                                <tr>
+                                    <th class="px-6 py-4 font-medium">Tipe Latihan</th>
+                                    <th class="px-6 py-4 font-medium">Pelajaran</th>
+                                    <th class="px-6 py-4 font-medium">Pertanyaan/Topik</th>
+                                    <th class="px-6 py-4 font-medium">Status</th>
+                                    <th class="px-6 py-4 font-medium">Aksi</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-gray-100 text-sm">
+                                ${exercises.map(ex => {
+                    const lessonInfo = lessonMap[ex.lesson_id];
+                    // Extract a preview of the question or content
+                    let preview = 'Latihan Praktik';
+                    if (ex.content && ex.content.question) {
+                        preview = ex.content.question.substring(0, 40) + (ex.content.question.length > 40 ? '...' : '');
+                    } else if (ex.type === 'reading') {
+                        preview = 'Pemahaman Membaca';
+                    }
+
+                    const isCompleted = lessonInfo.status === 'completed'; // Assuming lesson complete = exercises complete for now
+
+                    return `
+                                    <tr class="hover:bg-gray-50 transition-colors">
+                                        <td class="px-6 py-4">
+                                            <span class="capitalize font-semibold text-brand-black">${ex.type}</span>
+                                        </td>
+                                        <td class="px-6 py-4 text-gray-500">
+                                            ${lessonInfo.title}
+                                        </td>
+                                        <td class="px-6 py-4 text-gray-600 italic">
+                                            "${preview}"
+                                        </td>
+                                        <td class="px-6 py-4">
+                                            <span class="px-2 py-1 rounded text-xs font-bold ${isCompleted
+                            ? 'bg-green-100 text-green-700'
+                            : 'bg-blue-100 text-blue-700'
+                        }">
+                                                ${isCompleted ? 'Selesai' : 'Belum'}
+                                            </span>
+                                        </td>
+                                        <td class="px-6 py-4">
+                                            <button onclick="window.goToLesson('${ex.lesson_id}')" 
+                                                class="text-brand-teal hover:text-brand-black font-medium transition-colors">
+                                                Ke Pelajaran &rarr;
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    `;
+                }).join('')}
+                            </tbody>
+                        </table>
+                    </div>
+                `;
+            }
+
+            // Expose goToLesson if not already global (it is in student-dashboard but maybe not here)
+            window.goToLesson = (id) => {
+                if (!id) return;
+                localStorage.setItem('currentLessonId', id);
+                window.location.href = 'lesson.html';
+            };
+
+            fetchAssignments();
+        });
+    </script>
+</body>
+
+</html>

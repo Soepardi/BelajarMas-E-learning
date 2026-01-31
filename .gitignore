@@ -1,0 +1,13 @@
+# Dependencies
+node_modules/
+
+# Agent & Specs
+.agent/
+openspec/
+
+# Environment variables
+.env
+
+# System files
+.DS_Store
+Thumbs.db
