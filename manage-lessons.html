@@ -15,7 +15,7 @@
 </head>
 
 <body class="bg-white text-brand-black min-h-screen font-sans">
-    
+
     <div class="fixed inset-0 -z-10 overflow-hidden pointer-events-none">
         <div class="absolute bottom-[20%] right-[10%] w-[30%] h-[30%] bg-brand-teal/5 rounded-full blur-[100px]"></div>
     </div>
@@ -66,7 +66,7 @@
         </main>
     </div>
 
-    
+
     <div id="createLessonModal"
         class="hidden fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm animate-fade-in">
         <div class="w-full max-w-2xl bg-white rounded-2xl p-8 relative shadow-2xl max-h-[90vh] overflow-y-auto">
@@ -104,7 +104,7 @@
                         class="w-full px-4 py-3 bg-gray-50 rounded-xl border-0 ring-1 ring-gray-200 focus:ring-2 focus:ring-brand-teal focus:bg-white outline-none transition-all resize-none font-medium text-brand-black placeholder:text-gray-400"></textarea>
                 </div>
 
-                
+
                 <div>
                     <label class="text-xs font-bold text-gray-500 uppercase tracking-wider ml-1 mb-2 block">Lesson
                         Material (Video/Audio)</label>
@@ -125,7 +125,7 @@
                         </label>
                     </div>
 
-                    
+
                     <div id="uploadInput"
                         class="border-2 border-dashed border-gray-200 rounded-xl p-8 text-center hover:bg-gray-50 hover:border-brand-teal/50 transition-all cursor-pointer relative group">
                         <input type="file" id="videoFile" accept="video/*,audio/*"
@@ -140,7 +140,7 @@
                         <p id="fileName" class="text-brand-teal text-sm font-medium mt-3"></p>
                     </div>
 
-                    
+
                     <div id="youtubeInput" class="hidden">
                         <div class="relative">
                             <div class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400">
@@ -179,7 +179,7 @@
 
 
 
-            
+
             window.toggleVideoInput = () => {
                 const source = document.querySelector('input[name="videoSource"]:checked').value;
                 const uploadInput = document.getElementById('uploadInput');
@@ -194,7 +194,7 @@
                 }
             };
 
-            
+
             const createModal = document.getElementById('createLessonModal');
             const createForm = document.getElementById('createLessonForm');
 
@@ -209,11 +209,11 @@
                 document.getElementById('currentVideoUrl').value = '';
                 document.getElementById('fileName').textContent = '';
                 document.getElementById('submitBtnText').textContent = 'Create Lesson';
-                
+
                 const modalTitle = createModal.querySelector('h2');
                 if (modalTitle) modalTitle.textContent = 'Create New Lesson';
 
-                
+
                 const uploadRadio = document.querySelector('input[name="videoSource"][value="upload"]');
                 if (uploadRadio) uploadRadio.checked = true;
                 if (typeof toggleVideoInput === 'function') toggleVideoInput();
@@ -235,7 +235,7 @@
                     const videoSource = document.querySelector('input[name="videoSource"]:checked').value;
                     let videoUrl = document.getElementById('currentVideoUrl').value;
 
-                    
+
                     if (videoSource === 'upload') {
                         const file = document.getElementById('videoFile').files[0];
                         if (file) {
@@ -271,7 +271,7 @@
                     }
 
                     if (lessonId) {
-                        
+
                         const { error } = await supabase
                             .from('lessons')
                             .update({
@@ -285,7 +285,7 @@
                         if (error) throw error;
                         alert('Lesson updated successfully!');
                     } else {
-                        
+
                         const { error } = await supabase
                             .from('lessons')
                             .insert({
@@ -338,6 +338,9 @@
                         <td class="px-6 py-4 text-gray-900">-</td>
                         <td class="px-6 py-4"><span class="px-2 py-1 rounded bg-green-100 text-green-700 text-xs font-bold">Active</span></td>
                         <td class="px-6 py-4 text-right">
+                            <button onclick="goToAddExercise('${lesson.id}')" class="text-brand-orange hover:text-brand-orange-hover mx-1" title="Add Exercises">
+                                <i class="fas fa-clipboard-list"></i>
+                            </button>
                             <button onclick="editLesson('${lesson.id}')" class="text-gray-400 hover:text-brand-teal mx-1" title="Edit">
                                 <i class="fas fa-edit"></i>
                             </button>
@@ -359,29 +362,29 @@
 
                     if (error) throw error;
 
-                    
+
                     document.getElementById('editLessonId').value = lesson.id;
                     document.getElementById('lessonTitle').value = lesson.title;
                     document.getElementById('lessonCategory').value = lesson.category;
                     document.getElementById('lessonDescription').value = lesson.description;
                     document.getElementById('currentVideoUrl').value = lesson.video_url || '';
 
-                    
+
                     const isYouTube = lesson.video_url && (lesson.video_url.includes('youtube.com') || lesson.video_url.includes('youtu.be'));
 
                     if (isYouTube) {
                         document.querySelector('input[name="videoSource"][value="youtube"]').checked = true;
                         document.getElementById('customVideoUrl').value = lesson.video_url;
-                        toggleVideoInput(); 
+                        toggleVideoInput();
                     } else {
                         document.querySelector('input[name="videoSource"][value="upload"]').checked = true;
                         if (lesson.video_url) {
                             document.getElementById('fileName').textContent = "Current: " + lesson.video_url.split('/').pop();
                         }
-                        toggleVideoInput(); 
+                        toggleVideoInput();
                     }
 
-                    
+
                     document.getElementById('submitBtnText').textContent = 'Update Lesson';
                     document.querySelector('.bg-white h2').textContent = 'Edit Lesson';
 
@@ -393,13 +396,13 @@
                 }
             };
 
-            
+
             window.goToAddExercise = (id) => {
                 if (!id) return;
                 console.log('Navigating to Add Exercise for ID:', id);
-                
+
                 localStorage.setItem('exerciseLessonId', id);
-                
+
                 window.location.href = `add-exercise.html?lessonId=${id}`;
             };
 
