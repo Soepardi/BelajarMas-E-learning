@@ -16,6 +16,12 @@ create table if not exists profiles (
 
 -- RLS for Profiles
 alter table profiles enable row level security;
+
+-- Drop existing policies to prevent errors on re-run
+drop policy if exists "Public profiles are viewable by everyone." on profiles;
+drop policy if exists "Users can insert their own profile." on profiles;
+drop policy if exists "Users can update own profile." on profiles;
+
 create policy "Public profiles are viewable by everyone." on profiles for select using (true);
 create policy "Users can insert their own profile." on profiles for insert with check (auth.uid() = id);
 create policy "Users can update own profile." on profiles for update using (auth.uid() = id);
@@ -33,6 +39,12 @@ create table if not exists lessons (
 
 -- RLS for Lessons
 alter table lessons enable row level security;
+
+drop policy if exists "Lessons are viewable by everyone." on lessons;
+drop policy if exists "Teachers can insert lessons." on lessons;
+drop policy if exists "Teachers can update their own lessons." on lessons;
+drop policy if exists "Teachers can delete their own lessons." on lessons;
+
 create policy "Lessons are viewable by everyone." on lessons for select using (true);
 create policy "Teachers can insert lessons." on lessons for insert with check (
   exists (select 1 from profiles where id = auth.uid() and role = 'teacher')
@@ -56,6 +68,10 @@ create table if not exists exercises (
 
 -- RLS for Exercises
 alter table exercises enable row level security;
+
+drop policy if exists "Exercises are viewable by everyone." on exercises;
+drop policy if exists "Teachers can insert exercises." on exercises;
+
 create policy "Exercises are viewable by everyone." on exercises for select using (true);
 create policy "Teachers can insert exercises." on exercises for insert with check (
   exists (select 1 from profiles where id = auth.uid() and role = 'teacher')
@@ -76,6 +92,10 @@ create table if not exists progress (
 
 -- RLS for Progress
 alter table progress enable row level security;
+
+drop policy if exists "Users can view their own progress." on progress;
+drop policy if exists "Users can insert/update their own progress." on progress;
+
 create policy "Users can view their own progress." on progress for select using (auth.uid() = student_id);
 create policy "Users can insert/update their own progress." on progress for all using (auth.uid() = student_id);
 

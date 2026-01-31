@@ -67,17 +67,8 @@ export async function signUp(email, password, role, fullName) {
     }
 
     if (data.user) {
-        // Create profile record (Trigger usually handles this, but good to be safe or explicit if no trigger)
-        const { error: profileError } = await supabase.from('profiles').insert([{
-            id: data.user.id,
-            email: email,
-            full_name: fullName,
-            role: role
-        }]);
-
-        if (profileError) {
-            console.error('Error creating profile:', profileError);
-        }
+        // Profile creation is now handled by the 'on_auth_user_created' database trigger
+        // defined in db_schema.sql. We do not need to manually insert here.
 
         alert('Registrasi berhasil! Silakan periksa email Anda untuk verifikasi (jika diaktifkan) atau masuk.');
         window.location.href = 'login.html';
