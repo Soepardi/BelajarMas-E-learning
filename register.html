@@ -23,30 +23,23 @@
         <div
             class="bg-white flex flex-col justify-center p-8 md:p-12 lg:p-16 relative animate-fade-in order-2 md:order-1">
 
-            <div class="w-full max-w-md mx-auto mb-8">
-                <a href="index.html"
-                    class="inline-flex items-center gap-2 text-gray-500 hover:text-brand-teal transition-colors font-medium group">
-                    <div
-                        class="w-8 h-8 rounded-full bg-gray-50 flex items-center justify-center group-hover:bg-brand-teal/10 transition-colors">
+            <div class="w-full max-w-md mx-auto space-y-5">
+                <div class="flex items-start gap-4 mb-8">
+                    <a href="index.html"
+                        class="w-10 h-10 rounded-full bg-gray-50 flex-shrink-0 flex items-center justify-center text-gray-500 hover:bg-brand-teal/10 hover:text-brand-teal transition-all group mt-1">
                         <i class="fas fa-arrow-left text-sm group-hover:-translate-x-0.5 transition-transform"></i>
+                    </a>
+                    <div class="text-left">
+                        <h1 class="text-3xl font-heading font-bold text-gray-900 mb-2">Buat Akun</h1>
                     </div>
-                    <span>Kembali ke Beranda</span>
-                </a>
-            </div>
-
-            
-            <div class="w-full max-w-md mx-auto">
-                <div class="mb-8 text-center md:text-left">
-                    <h1 class="text-3xl font-heading font-bold text-gray-900 mb-2">Buat Akun</h1>
-                    <p class="text-gray-500">Bergabung dengan komunitas kami hari ini.</p>
                 </div>
-
+                <div class="w-full max-w-md mx-auto space-y-5"><p class="text-gray-500">Bergabung dengan komunitas kami hari ini.</p></div>
                 <form id="registerForm" class="space-y-5">
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-1.5">Nama Lengkap</label>
                         <div class="relative">
                             <span class="absolute left-4 top-3.5 text-gray-400"><i class="fas fa-user"></i></span>
-                            <input type="text" id="fullName" required placeholder="John Doe"
+                            <input type="text" id="fullName" required placeholder="Supardi Akhiyat"
                                 class="w-full bg-gray-50 border border-gray-200 rounded-xl py-3 pl-11 pr-4 focus:outline-none focus:border-brand-orange focus:ring-2 focus:ring-brand-orange/20 transition-all text-gray-800">
                         </div>
                     </div>
@@ -121,7 +114,8 @@
                     <h2 class="text-3xl lg:text-4xl font-heading font-bold text-white leading-tight mb-4">
                         Mulai Perjalanan Belajarmu
                     </h2>
-                    <p class="text-white/80 text-lg font-light">"Hal yang indah tentang belajar adalah tidak ada yang
+                    <p class="text-white/80 text-lg font-light">"Hal yang indah tentang belajar adalah tidak ada
+                        yang
                         bisa mengambilnya darimu."</p>
                     <p class="text-white/60 mt-2 font-medium text-base">- B.B. King</p>
                 </div>
@@ -144,7 +138,7 @@
         </div>
     </div>
 
-    
+
     <script type="module" src="assets/js/supabaseClient.js"></script>
     <script type="module" src="assets/js/auth.js"></script>
     <script type="module">

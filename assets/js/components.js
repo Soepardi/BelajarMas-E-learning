@@ -6,7 +6,7 @@ export function renderSidebar(activePage = 'dashboard', role = 'student') {
 
     const linkClasses = (isActive) => isActive
         ? 'bg-brand-teal text-white font-semibold shadow-lg shadow-brand-teal/20'
-        : 'text-gray-500 hover:bg-orange-100 hover:shadow-sm hover:text-brand-teal';
+        : 'text-gray-500 hover:bg-brand-teal/10 hover:shadow-sm hover:text-brand-teal';
 
     const iconClasses = (isActive) => isActive
         ? 'text-white'
@@ -107,7 +107,7 @@ export function renderSidebar(activePage = 'dashboard', role = 'student') {
 
         <!-- Collapse Button (Icon Only) -->
         <div id="collapse-container" class="px-6 mb-2 flex justify-end">
-            <button id="collapse-btn" onclick="toggleSidebar()" class="w-8 h-8 rounded-lg flex items-center justify-center text-gray-400 hover:bg-orange-100 hover:shadow-sm hover:text-brand-teal transition-all" title="Alihkan Sidebar">
+            <button id="collapse-btn" onclick="toggleSidebar()" class="w-8 h-8 rounded-lg flex items-center justify-center text-gray-400 hover:bg-brand-teal/10 hover:shadow-sm hover:text-brand-teal transition-all" title="Alihkan Sidebar">
                 <i id="toggle-icon" class="fas fa-chevron-left"></i>
             </button>
         </div>

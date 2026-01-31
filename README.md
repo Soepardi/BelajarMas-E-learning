@@ -1,6 +1,7 @@
-# Platform E-learning
+# Platform E-learning Belajarmas
 
 Aplikasi web e-learning yang modern dan responsif, dibangun menggunakan HTML murni, JavaScript (ES Modules), dan Tailwind CSS, serta didukung oleh Supabase untuk layanan backend.
+aplikasi ini dibuat untuk memenuhi tugas Mata Kuliah Pemrograman Berbasis Web PJJ-SI Universitas Siber Asia oleh Supardi Akhiyat.
 
 ## Teknologi yang Digunakan
 
@@ -17,6 +18,7 @@ Aplikasi web e-learning yang modern dan responsif, dibangun menggunakan HTML mur
         *   **Database**: PostgreSQL untuk menyimpan pengguna, pelajaran, progres, dan tugas.
         *   **Penyimpanan (Storage)**: Bucket untuk thumbnail pelajaran dan konten video.
     *   **Video**: Pemutar Video HTML5.
+    *   **Audio**: Pemutar Audio HTML5.
 
 ## Memulai
 
@@ -25,7 +27,7 @@ Ikuti instruksi ini untuk mengatur dan menjalankan proyek secara lokal.
 ### Prasyarat
 
 *   **Node.js** (v18 atau lebih baru) & **npm**: Diperlukan untuk mengompilasi Tailwind CSS dan menjalankan server lokal.
-*   Proyek **Supabase** (Jika Anda berencana menggunakan backend Anda sendiri).
+*   Proyek **Supabase** .
 
 ### Instalasi
 
@@ -46,7 +48,7 @@ Ikuti instruksi ini untuk mengatur dan menjalankan proyek secara lokal.
 1.  **Pengaturan Supabase**
     Proyek ini saat ini dikonfigurasi dengan instance Supabase demo/pengembangan di `assets/js/supabaseClient.js`.
 
-    Untuk menggunakan proyek Supabase Anda sendiri:
+    Untuk menggunakan proyek Supabase:
     *   Buat proyek di [supabase.com](https://supabase.com).
     *   Jalankan skrip SQL yang disediakan (di editor SQL) untuk mengatur skema database:
         *   `db_schema.sql` (Pembuatan Skema)
@@ -60,7 +62,7 @@ Ikuti instruksi ini untuk mengatur dan menjalankan proyek secara lokal.
 ### Menjalankan Aplikasi
 
 1.  **Build CSS**
-    Kompilasi gaya Tailwind CSS. Anda harus menjalankan ini setiap kali Anda membuat perubahan pada kelas HTML.
+    Kompilasi gaya Tailwind CSS. Jalankan perintah ini setiap kali membuat perubahan pada kelas HTML.
     ```bash
     npm run build:css
     ```
@@ -74,7 +76,7 @@ Ikuti instruksi ini untuk mengatur dan menjalankan proyek secara lokal.
     ```bash
     npm start
     ```
-    Buka browser Anda dan navigasikan ke `http://localhost:3000` (atau port yang ditampilkan di terminal).
+    Buka browser dan navigasikan ke `http://localhost:3000` (atau port yang ditampilkan di terminal).
 
 ## Struktur Proyek
 
@@ -83,10 +85,10 @@ elearning/
 ├── assets/
 │   ├── css/
 │   │   ├── input.css       # Titik masuk Tailwind
-│   │   └── style.css       # Output yang dikompilasi (jangan diedit langsung)
+│   │   └── style.css       # Output yang dikompilasi
 │   ├── js/
 │   │   ├── auth.js         # Logika autentikasi
-│   │   ├── components.js   # Komponen UI yang dapat digunakan kembali (Sidebar, dll.)
+│   │   ├── components.js   # Komponen UI
 │   │   └── supabaseClient.js # Konfigurasi Supabase
 │   └── images/
 ├── index.html              # Halaman beranda
