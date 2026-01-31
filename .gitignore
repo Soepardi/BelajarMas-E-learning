@@ -4,6 +4,7 @@ node_modules/
 # Agent & Specs
 .agent/
 openspec/
+.gihub/
 
 # Environment variables
 .env
