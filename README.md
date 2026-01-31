@@ -108,5 +108,3 @@ BelajarMas-E-learning/
 *   **Manajemen Pelajaran**: Guru dapat membuat, mengedit, dan menghapus pelajaran.
 *   **Pelacakan Progres**: Siswa dapat melacak status penyelesaian kursus mereka.
 *   **Tugas**: Sistem untuk mendistribusikan dan melihat latihan.
-*   **Desain Responsif**: Sepenuhnya dioptimalkan untuk seluler, tablet, dan desktop.
-*   **Dukungan Multi-bahasa**: Antarmuka sepenuhnya diterjemahkan ke dalam Bahasa Indonesia.
