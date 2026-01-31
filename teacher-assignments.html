@@ -74,7 +74,7 @@
             async function fetchSubmissions() {
                 const tbody = document.getElementById('assignmentsTableBody');
 
-                // 1. Get Teacher's Lessons
+                
                 const { data: myLessons } = await supabase
                     .from('lessons')
                     .select('id, title')
@@ -88,7 +88,7 @@
                 const myLessonIds = myLessons.map(l => l.id);
                 const lessonMap = Object.fromEntries(myLessons.map(l => [l.id, l.title]));
 
-                // 2. Fetch Completed Progress
+                
                 const { data: progress, error } = await supabase
                     .from('progress')
                     .select(`

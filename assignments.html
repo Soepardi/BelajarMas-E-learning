@@ -58,7 +58,7 @@
             async function fetchAssignments() {
                 const contentDiv = document.querySelector('.bg-white.rounded-2xl');
 
-                // 1. Fetch Enrolled Lessons (Progress) to know what student has access to
+                
                 const { data: enrollments, error: progressError } = await supabase
                     .from('progress')
                     .select('lesson_id, status, lessons(title)')
@@ -70,11 +70,11 @@
                 }
 
                 if (!enrollments || enrollments.length === 0) {
-                    return; // Default empty state
+                    return; 
                 }
 
                 const enrolledLessonIds = enrollments.map(e => e.lesson_id);
-                // Create a map for quick status lookup: lesson_id -> { status, title }
+                
                 const lessonMap = {};
                 enrollments.forEach(e => {
                     lessonMap[e.lesson_id] = {
@@ -83,7 +83,7 @@
                     };
                 });
 
-                // 2. Fetch Exercises for these lessons
+
                 const { data: exercises, error: exercisesError } = await supabase
                     .from('exercises')
                     .select('id, lesson_id, type, content')

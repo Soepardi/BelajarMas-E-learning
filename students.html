@@ -51,7 +51,7 @@
 
             const container = document.querySelector('.p-6');
 
-            // 1. Fetch Teacher's Lessons
+            
             const { data: myLessons } = await supabase
                 .from('lessons')
                 .select('id')
@@ -64,7 +64,7 @@
 
             const myLessonIds = myLessons.map(l => l.id);
 
-            // 2. Fetch Progress (Enrollments)
+            
             const { data: enrollments, error } = await supabase
                 .from('progress')
                 .select(`
@@ -80,7 +80,7 @@
                 return;
             }
 
-            // Group by Student (Unique Students)
+            
             const uniqueStudents = {};
             enrollments.forEach(e => {
                 if (!uniqueStudents[e.student_id]) {
@@ -97,7 +97,7 @@
 
             const studentsList = Object.values(uniqueStudents);
 
-            // Render
+            
             const contentDiv = document.querySelector('.bg-white.rounded-2xl');
             if (studentsList.length > 0) {
                 contentDiv.classList.remove('text-center', 'py-16');

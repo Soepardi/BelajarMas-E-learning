@@ -357,8 +357,7 @@
 
                     if (videoSource === 'upload') {
                         const file = videoFile.files[0];
-                        // If file is selected, upload it. If not, keep existing videoUrl (unless in 'upload' mode and no file, then it might be null for new, or exist for edit)
-                        // Actually, if update and no file, videoUrl remains same. 
+
 
                         if (file) {
                             const fileExt = file.name.split('.').pop();
@@ -386,7 +385,7 @@
                             videoUrl = publicUrl;
                         }
                     } else {
-                        // YouTube URL
+                        
                         videoUrl = document.getElementById('customVideoUrl').value;
                         if (!videoUrl) throw new Error("Mohon masukkan URL YouTube");
                     }
@@ -396,7 +395,7 @@
                     const category = document.getElementById('lessonCategory').value;
 
                     if (lessonId) {
-                        // UPDATE
+                        
                         const { error } = await supabase
                             .from('lessons')
                             .update({
@@ -410,7 +409,7 @@
                         if (error) throw error;
                         alert('Pelajaran Berhasil Diperbarui!');
                     } else {
-                        // INSERT
+                        
                         const { error: dbError } = await supabase.from('lessons').insert([{
                             title,
                             description,
@@ -424,7 +423,7 @@
                     }
 
                     closeCreateLessonModal();
-                    // Optional: Reload or update list
+                    
                     fetchLessons();
 
                 } catch (err) {

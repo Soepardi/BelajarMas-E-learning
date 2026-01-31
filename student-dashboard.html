@@ -6,11 +6,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dasbor Siswa - BelajarMas</title>
     <link rel="icon" type="image/x-icon" href="assets/images/icon.ico">
-    <!-- Google Fonts -->
+    
     <link
         href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700&display=swap"
         rel="stylesheet">
-    <!-- Custom CSS -->
+    
     <link rel="stylesheet" href="assets/css/style.css">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -18,7 +18,7 @@
 
 <body class="bg-white text-brand-black min-h-screen font-sans">
 
-    <!-- Background Elements -->
+   
     <div class="fixed inset-0 -z-10 overflow-hidden pointer-events-none">
         <div class="absolute top-[10%] left-[20%] w-[30%] h-[30%] bg-brand-teal/5 rounded-full blur-[120px]"></div>
         <div class="absolute bottom-[10%] right-[10%] w-[30%] h-[30%] bg-brand-orange/5 rounded-full blur-[100px]">
@@ -26,15 +26,15 @@
     </div>
 
     <div id="app" class="flex min-h-screen">
-        <!-- Sidebar container -->
+        
         <div id="sidebar-container"></div>
 
         <main class="flex-1 md:ml-64 relative w-full">
-            <!-- Mobile Header -->
+            
             <div id="mobile-header-container"></div>
 
             <div class="p-6 md:p-10 max-w-7xl mx-auto space-y-8">
-                <!-- Welcome Section -->
+                
                 <header class="flex flex-col md:flex-row md:items-center justify-between gap-4 animate-fade-in">
                     <div>
                         <h1 class="text-3xl font-heading font-bold text-brand-black mb-2">Halo, <span id="userName"
@@ -43,7 +43,7 @@
                     </div>
                 </header>
 
-                <!-- Stats Grid -->
+                
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-6 animate-fade-in" style="animation-delay: 0.1s;">
                     <div class="bg-white p-6 rounded-2xl flex items-center gap-4 shadow-sm border border-gray-100">
                         <div class="w-12 h-12 rounded-xl bg-blue-50 flex items-center justify-center text-blue-500">
@@ -75,12 +75,12 @@
                     </div>
                 </div>
 
-                <!-- Recommended Courses -->
+                
                 <section class="animate-fade-in" style="animation-delay: 0.2s;">
                     <h2 class="text-xl font-heading font-semibold text-brand-black mb-6">Direkomendasikan Untuk Anda
                     </h2>
                     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="coursesGrid">
-                        <!-- Loading State -->
+                        
                         <div class="bg-white p-4 rounded-2xl shadow-sm border border-gray-100 animate-pulse">
                             <div class="aspect-video bg-gray-100 rounded-xl mb-4"></div>
                             <div class="h-4 bg-gray-100 rounded w-3/4 mb-2"></div>
@@ -113,9 +113,7 @@
 
             document.getElementById('logoutBtn').addEventListener('click', signOut);
 
-            // Fetch Enrolled Courses (Progress + Lessons)
-            // Note: We use the relational query syntax. Ensure foreign keys are correct in schema.
-            // schema.sql logic: progress.lesson_id references lessons.id
+            
             const { data: enrollments, error } = await supabase
                 .from('progress')
                 .select(`
@@ -135,25 +133,24 @@
             const grid = document.getElementById('coursesGrid');
             const recommendedTitle = document.querySelector('h2');
 
-            // Change title to "My Learning" if user has enrollments
+            
             if (enrollments && enrollments.length > 0) {
                 recommendedTitle.textContent = "Pembelajaran Saya";
             } else {
                 recommendedTitle.textContent = "Direkomendasikan Untuk Anda (Daftar untuk melihat kursus di sini)";
-                // Ideally fetch random lessons here if empty, but for now we'll just show empty state or link to courses
+                
             }
 
-            // Stats Calculation
+            
             const totalEnrolled = enrollments?.length || 0;
             const completedCount = enrollments?.filter(e => e.status === 'completed').length || 0;
             const progressPercent = totalEnrolled > 0 ? Math.round((completedCount / totalEnrolled) * 100) : 0;
 
-            // Update Stats UI
-            // Hours (Mock: 2 hours per enrolled course)
+            
             document.querySelector('.fa-clock').closest('.bg-white').querySelector('h3').textContent = (totalEnrolled * 2.5).toFixed(1);
-            // Progress
+            
             document.querySelector('.fa-fire').closest('.bg-white').querySelector('h3').textContent = progressPercent + '%';
-            // Certificates
+            
             document.querySelector('.fa-trophy').closest('.bg-white').querySelector('h3').textContent = completedCount;
 
 
@@ -166,7 +163,7 @@
             if (enrollments && enrollments.length > 0) {
                 grid.innerHTML = enrollments.map(item => {
                     const lesson = item.lessons;
-                    if (!lesson) return ''; // Skip if lesson deleted
+                    if (!lesson) return ''; 
 
                     if (!lesson.id) {
                         console.error('Missing ID for lesson:', lesson);
@@ -211,11 +208,11 @@
             }
         });
 
-        // Global Navigation Function
+        
         window.goToLesson = (id) => {
             console.log('Saving Lesson ID:', id);
             localStorage.setItem('currentLessonId', id);
-            // Small delay to ensure storage writes (rarely needed but safer for dev)
+            
             setTimeout(() => {
                 window.location.href = `lesson.html?id=${id}`;
             }, 50);
