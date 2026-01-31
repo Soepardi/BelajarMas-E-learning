@@ -50,9 +50,10 @@ Ikuti instruksi ini untuk mengatur dan menjalankan proyek secara lokal.
 
     Untuk menggunakan proyek Supabase:
     *   Buat proyek di [supabase.com](https://supabase.com).
-    *   Jalankan skrip SQL yang disediakan (di editor SQL) untuk mengatur skema database:
-        *   `db_schema.sql` (Pembuatan Skema)
-        *   `policies.sql` (Kebijakan Keamanan Tingkat Baris / RLS)
+    *   Jalankan skrip SQL yang disediakan secara berurutan:
+        *   `db_schema.sql` (Schema, Tabel, Policies, Auth Triggers)
+        *   `db_storage.sql` (Setup Bucket Storage & Policies)
+        *   `db_seed.sql` (Data Dumy Awal - Optional)
     *   Perbarui `assets/js/supabaseClient.js` dengan URL proyek dan Kunci Anon Anda:
         ```javascript
         const SUPABASE_URL = 'URL_SUPABASE_ANDA';
