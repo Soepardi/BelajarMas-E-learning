@@ -33,8 +33,8 @@ Ikuti instruksi ini untuk mengatur dan menjalankan proyek secara lokal.
 
 1.  **Clone repositori**
     ```bash
-    git clone https://github.com/username-anda/elearning.git
-    cd elearning
+    git clone https://github.com/Soepardi/BelajarMas-E-learning.git
+    cd BelajarMas-E-learning
     ```
 
 2.  **Instal Dependensi**
@@ -82,7 +82,7 @@ Ikuti instruksi ini untuk mengatur dan menjalankan proyek secara lokal.
 ## Struktur Proyek
 
 ```
-elearning/
+BelajarMas-E-learning/
 ├── assets/
 │   ├── css/
 │   │   ├── input.css       # Titik masuk Tailwind
